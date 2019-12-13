@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowUtility"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="900" Background="Azure" WindowStyle="ToolWindow" MaxWidth="900" MaxHeight="450" MinWidth="900" MinHeight="450" Loaded="Window_Loaded">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+
+        </Grid.Resources>
+        <Label Content="Window"  Grid.Column="0" Margin="10,30,0,0" FontSize="20" FontWeight="Bold"/>
+        <ListView x:Name="WindowListView" Grid.Column="0" Margin="20,70,20,10">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Icon}"/>
+                        <TextBlock Text="{Binding Name}" FontSize="16"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+        <Label Content="Preview" Grid.Column="1" Margin="0,20,0,0" FontSize="20" FontWeight="Bold"/>
+        <Border Grid.Column="1" Margin="10,60,20,150" BorderBrush="Gray" Background="White" BorderThickness="1">
+            <Image x:Name="PreviewImage"/>
+        </Border>
+
+        <Button x:Name="ExBtn" Grid.Column="1" Content="Execute" Margin="10,300,20,20" Height="70" FontSize="20" Click="ExBtn_Click"/>
     </Grid>
 </Window>

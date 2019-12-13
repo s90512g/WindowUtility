@@ -20,9 +20,21 @@ namespace WindowUtility
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Controller controller = new Controller();
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowListView.ItemsSource = controller.Model.WindowList;
+            
+        }
+
+        private void ExBtn_Click(object sender, RoutedEventArgs e)
+        {controller.GetWindowWorker();
+        }
+
     }
 }
