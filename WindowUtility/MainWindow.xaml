@@ -5,14 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowUtility"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="900" Background="Azure" WindowStyle="ToolWindow" MaxWidth="900" MaxHeight="450" MinWidth="900" MinHeight="450" Loaded="Window_Loaded">
+        Title="MainWindow" Height="450" Width="900" Background="Azure" WindowStyle="SingleBorderWindow" MaxWidth="900" MaxHeight="450" MinWidth="900" MinHeight="450" 
+        Loaded="Window_Loaded" Closing="Window_Closing" ShowInTaskbar="True">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.Resources>
-
+            <Style TargetType="ListViewItem">
+                <EventSetter Event="MouseMove" Handler="ListViewItem_MouseMove"/>
+            </Style>
         </Grid.Resources>
         <Label Content="Window"  Grid.Column="0" Margin="10,30,0,0" FontSize="20" FontWeight="Bold"/>
         <ListView x:Name="WindowListView" Grid.Column="0" Margin="20,70,20,10">
@@ -24,11 +27,10 @@
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
         <Label Content="Preview" Grid.Column="1" Margin="0,20,0,0" FontSize="20" FontWeight="Bold"/>
         <Border Grid.Column="1" Margin="10,60,20,150" BorderBrush="Gray" Background="White" BorderThickness="1">
-            <Image x:Name="PreviewImage"/>
+        <Image x:Name="PreviewImage" Source="{Binding PreViewImage}"/>
         </Border>
 
         <Button x:Name="ExBtn" Grid.Column="1" Content="Execute" Margin="10,300,20,20" Height="70" FontSize="20" Click="ExBtn_Click"/>

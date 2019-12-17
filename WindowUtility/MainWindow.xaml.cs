@@ -21,6 +21,7 @@ namespace WindowUtility
     public partial class MainWindow : Window
     {
         private Controller controller = new Controller();
+        private WindowInfo MouseTmp = new WindowInfo();
         public MainWindow()
         {
             InitializeComponent();
@@ -28,13 +29,44 @@ namespace WindowUtility
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.DataContext = controller.Model;
             WindowListView.ItemsSource = controller.Model.WindowList;
+            PreviewImage.Source = controller.Model.PreViewImage;
+            controller.ImageUpdateHandler += new ImageUpdateHandler(ImageUpdate);
+            controller.GetWindowWorker();
+        }
+        private void ImageUpdate(ImageUpdateEventArgs e)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                PreviewImage.Source = e.PreViewImage;
+            });
+        }
+        private void ExBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowListView.SelectedItem is WindowInfo selectItem)
+            {
+                controller.ShowWindow(selectItem.HWnd);              
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
             
         }
 
-        private void ExBtn_Click(object sender, RoutedEventArgs e)
-        {controller.GetWindowWorker();
+        private void ListViewItem_MouseMove(object sender, MouseEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if(item.Content is WindowInfo tmp)
+            {
+                if (!Equals(tmp, MouseTmp))
+                {
+                    MouseTmp = tmp;
+                    Console.WriteLine(MouseTmp.HWnd);
+                    controller.GetPreView(MouseTmp.HWnd);
+                }
+            }
         }
-
     }
 }
