@@ -32,7 +32,7 @@ namespace WindowUtility
         private readonly int GCL_HICON = -14;
         private readonly uint WM_GETICON = 0x007f;
         private readonly int IDI_APPLICATION = 0x7F00;
-        private readonly int ICON_SMALL2 = 1;
+        private readonly int ICON_BIG = 1;
         private static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
         {
             if (IntPtr.Size > 4)
@@ -42,12 +42,11 @@ namespace WindowUtility
         }
         public BitmapSource GetIcon(IntPtr hwnd)
         {
-            //var hIcon = SendMessage(hwnd, WM_GETICON, ICON_SMALL2, IntPtr.Zero);
             IntPtr hIcon = IntPtr.Zero;
-            SendMessageTimeout(hwnd, WM_GETICON, ICON_SMALL2, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ERRORONEXIT, 1000, out hIcon);
+            hIcon = GetClassLongPtr(hwnd, GCL_HICON);
             if (hIcon == IntPtr.Zero)
             {
-                hIcon = GetClassLongPtr(hwnd, GCL_HICON);
+                SendMessageTimeout(hwnd, WM_GETICON, ICON_BIG, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ERRORONEXIT, 1000, out hIcon);
             }
             if (hIcon == IntPtr.Zero)
             {
