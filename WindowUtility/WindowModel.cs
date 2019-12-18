@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
 
@@ -15,9 +10,9 @@ namespace WindowUtility
         public event PropertyChangedEventHandler PropertyChanged;
         public WindowModel()
         {
-            WindowList = new ObservableCollection<WindowInfo>();
+            WindowList = new ItemObservableCollection<WindowInfo>();          
         }
-        public ObservableCollection<WindowInfo> WindowList { get; private set; }
+        public ItemObservableCollection<WindowInfo> WindowList { get; private set; }        
         public BitmapSource PreviewImage
         {
             get { return _PreviewImage; }
@@ -34,6 +29,5 @@ namespace WindowUtility
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
 }

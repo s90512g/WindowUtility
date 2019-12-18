@@ -42,13 +42,13 @@ namespace WindowUtility
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+
         }
 
         private void ListViewItem_MouseMove(object sender, MouseEventArgs e)
         {
             var item = sender as ListViewItem;
-            if(item.Content is WindowInfo tmp)
+            if (item.Content is WindowInfo tmp)
             {
                 if (!Equals(tmp, MouseTmp))
                 {

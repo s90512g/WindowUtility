@@ -12,6 +12,5 @@ namespace WindowUtility
         public IntPtr HWnd { get; set; }
         public string Name { get; set; }
         public BitmapSource Icon { get; set; }
-
     }
 }

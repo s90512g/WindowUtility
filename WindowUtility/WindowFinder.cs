@@ -25,7 +25,7 @@ namespace WindowUtility
         [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
         static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
         private readonly int WS_EX_TOOLWINDOW = 0x0080;
-        private readonly int WS_EX_APPWINDOW = 0x40000;
+        //private readonly int WS_EX_APPWINDOW = 0x40000;
         private readonly int WS_CHILD = 0x40000000;
 
         private WindowIcon GetWindowIcon = new WindowIcon();
@@ -55,10 +55,10 @@ namespace WindowUtility
                 {
                     PrintWindowInfo(hWnd);
                 }
-                else if ((GetWindowLongPtr(hWnd, (int)GWL.GWL_EXSTYLE).ToInt32() & WS_EX_APPWINDOW) != WS_EX_APPWINDOW)
-                {
-                   // PrintWindowInfo(hWnd);
-                }
+                //else if ((GetWindowLongPtr(hWnd, (int)GWL.GWL_EXSTYLE).ToInt32() & WS_EX_APPWINDOW) != WS_EX_APPWINDOW)
+                //{
+                //   // PrintWindowInfo(hWnd);
+                //}
             }
             return true;
         }
