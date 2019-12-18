@@ -18,7 +18,7 @@
             </Style>
         </Grid.Resources>
         <Label Content="Window"  Grid.Column="0" Margin="10,30,0,0" FontSize="20" FontWeight="Bold"/>
-        <ListView x:Name="WindowListView" Grid.Column="0" Margin="20,70,20,10">
+        <ListView x:Name="WindowListView" Grid.Column="0" Margin="20,70,20,10" ItemsSource="{Binding Path=Model.WindowList}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -30,7 +30,7 @@
         </ListView>
         <Label Content="Preview" Grid.Column="1" Margin="0,20,0,0" FontSize="20" FontWeight="Bold"/>
         <Border Grid.Column="1" Margin="10,60,20,150" BorderBrush="Gray" Background="White" BorderThickness="1">
-        <Image x:Name="PreviewImage" Source="{Binding PreViewImage}"/>
+            <Image x:Name="PreviewImage" Source="{Binding Path = Model.PreviewImage}"/>
         </Border>
 
         <Button x:Name="ExBtn" Grid.Column="1" Content="Execute" Margin="10,300,20,20" Height="70" FontSize="20" Click="ExBtn_Click"/>

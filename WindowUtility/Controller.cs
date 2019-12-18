@@ -12,10 +12,14 @@ namespace WindowUtility
     class Controller
     {
         public ImageUpdateHandler ImageUpdateHandler;
-        public WindowModel Model = new WindowModel();
+        private WindowModel _Model = new WindowModel();
         private WindowFinder FindWindow = new WindowFinder();
         private WindowContent GetWindowContent = new WindowContent();
         private Thread GetWindowThread;
+        public WindowModel Model
+        {
+            get { return _Model; }
+        }
         public void GetWindowWorker()
         {
             GetWindowThread = new Thread(() =>
@@ -34,14 +38,18 @@ namespace WindowUtility
 
         public void GetPreView(IntPtr hwnd)
         {
-            Thread preThread = new Thread(() =>
+            lock (GetWindowContent)
             {
-                var img = GetWindowContent.GetContent(hwnd);
-                //Model.PreViewImage = img;
-                ImageUpdateHandler?.Invoke(new ImageUpdateEventArgs(img));
-            });
-            preThread.Start();
-            
+                Thread preThread = new Thread(() =>
+                {
+                    Console.WriteLine("start");
+                    var img = GetWindowContent.GetContent(hwnd);
+                    _Model.PreviewImage = img;
+                    ImageUpdateHandler?.Invoke(new ImageUpdateEventArgs(img));
+                    Console.WriteLine("finish");
+                });
+                preThread.Start();
+            }
         }
 
         [DllImport("user32")]
@@ -54,7 +62,7 @@ namespace WindowUtility
         private void ModelUpdate(List<WindowInfo> newWindowList)
         {
             List<string> oldHWNDList = new List<string>();
-            foreach (var window in Model.WindowList)
+            foreach (var window in _Model.WindowList)
             {
                 oldHWNDList.Add(window.HWnd.ToString());
             }
@@ -63,12 +71,12 @@ namespace WindowUtility
             {
                 if (oldHWNDList.Contains(newWindowItem.HWnd.ToString()))
                 {
-                    foreach (var oldWindowItem in Model.WindowList)
+                    foreach (var oldWindowItem in _Model.WindowList)
                     {
                         if (Equals(oldWindowItem.HWnd.ToString(), newWindowItem.HWnd.ToString()) && !Equals(oldWindowItem.Name, newWindowItem.Name))
                         {
-                            var index = Model.WindowList.IndexOf(oldWindowItem);
-                            WindowInfo item = Model.WindowList.ElementAt(index);
+                            var index = _Model.WindowList.IndexOf(oldWindowItem);
+                            WindowInfo item = _Model.WindowList.ElementAt(index);
                             item.Name = newWindowItem.Name;
                             item.Icon = newWindowItem.Icon;
                             break;
@@ -93,7 +101,7 @@ namespace WindowUtility
 
         private void RemoveWindowMember(string HWND)
         {
-            foreach (var removeWindowItem in Model.WindowList)
+            foreach (var removeWindowItem in _Model.WindowList)
             {
                 if (Equals(removeWindowItem.HWnd.ToString(), HWND))
                 {
@@ -101,7 +109,7 @@ namespace WindowUtility
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
-                            Model.WindowList.Remove(removeWindowItem);
+                            _Model.WindowList.Remove(removeWindowItem);
                         });
                     }
                     catch (NullReferenceException ex)
@@ -119,7 +127,7 @@ namespace WindowUtility
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Model.WindowList.Add(AddWindow);
+                    _Model.WindowList.Add(AddWindow);
                 });
             }
             catch (NullReferenceException ex)

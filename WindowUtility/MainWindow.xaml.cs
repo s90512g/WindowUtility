@@ -29,24 +29,14 @@ namespace WindowUtility
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = controller.Model;
-            WindowListView.ItemsSource = controller.Model.WindowList;
-            PreviewImage.Source = controller.Model.PreViewImage;
-            controller.ImageUpdateHandler += new ImageUpdateHandler(ImageUpdate);
+            this.DataContext = controller;
             controller.GetWindowWorker();
-        }
-        private void ImageUpdate(ImageUpdateEventArgs e)
-        {
-            Dispatcher.InvokeAsync(() =>
-            {
-                PreviewImage.Source = e.PreViewImage;
-            });
         }
         private void ExBtn_Click(object sender, RoutedEventArgs e)
         {
             if (WindowListView.SelectedItem is WindowInfo selectItem)
             {
-                controller.ShowWindow(selectItem.HWnd);              
+                controller.ShowWindow(selectItem.HWnd);
             }
         }
 

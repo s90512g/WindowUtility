@@ -11,22 +11,22 @@ namespace WindowUtility
 {
     class WindowModel : INotifyPropertyChanged
     {
-        private BitmapSource _PreViewImage;
+        private BitmapSource _PreviewImage;
         public event PropertyChangedEventHandler PropertyChanged;
         public WindowModel()
         {
             WindowList = new ObservableCollection<WindowInfo>();
         }
         public ObservableCollection<WindowInfo> WindowList { get; private set; }
-        public BitmapSource PreViewImage
+        public BitmapSource PreviewImage
         {
-            get { return _PreViewImage; }
+            get { return _PreviewImage; }
             set
             {
-                if (!Equals(_PreViewImage, value))
+                if (!Equals(_PreviewImage, value))
                 {
-                    _PreViewImage = value;
-                    //NotifyPropertyChanged("PreViewImage");
+                    _PreviewImage = value;
+                    NotifyPropertyChanged("PreviewImage");
                 }
             }
         }

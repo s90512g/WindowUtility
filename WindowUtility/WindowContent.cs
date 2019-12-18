@@ -63,6 +63,8 @@ namespace WindowUtility
                     DeleteDC(hmemdc);
                 }
             }
+            DeleteDC(hdc);
+            DeleteDC(hmemdc);
             return null;
         }
     }
