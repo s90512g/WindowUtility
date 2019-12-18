@@ -18,7 +18,7 @@ namespace WindowUtility
         private static extern IntPtr GetWindowDC(IntPtr hWnd);
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool GetWindowRect(IntPtr hwnd, out Rectangle lpRect);
+        private static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
         [DllImport("gdi32.dll", EntryPoint = "CreateCompatibleDC", SetLastError = true)]
         private static extern IntPtr CreateCompatibleDC([In] IntPtr hdc);
@@ -39,9 +39,11 @@ namespace WindowUtility
         public BitmapSource GetContent(IntPtr hwnd)
         {
             var hdc = GetWindowDC(hwnd);
-            Rectangle rect = new Rectangle();
+            RECT rect = new RECT();
             GetWindowRect(hwnd, out rect);
-            IntPtr hbitmap = CreateCompatibleBitmap(hdc, rect.Width, rect.Height);
+            int width = Math.Abs(rect.Right - rect.Left);
+            int height = Math.Abs(rect.Bottom - rect.Top);
+            IntPtr hbitmap = CreateCompatibleBitmap(hdc, width, height);
             IntPtr hmemdc = CreateCompatibleDC(hdc);
             SelectObject(hmemdc, hbitmap);
             var ans = PrintWindow(hwnd, hmemdc, 0x00000002);

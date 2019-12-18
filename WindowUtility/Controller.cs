@@ -69,7 +69,6 @@ namespace WindowUtility
                         if (Equals(oldWindowItem.HWnd.ToString(), newWindowItem.HWnd.ToString()) && !Equals(oldWindowItem.Name, newWindowItem.Name))
                         {
                             var index = Model.WindowList.IndexOf(oldWindowItem);
-                            //WindowInfo newItem = Model.WindowList.ElementAt(index);
                             Model.WindowList.Replace(index, newWindowItem);
                             break;
                         }
@@ -104,10 +103,7 @@ namespace WindowUtility
                             Model.WindowList.Remove(removeWindowItem);
                         });
                     }
-                    catch (NullReferenceException)
-                    {
-
-                    }
+                    catch (NullReferenceException) { }
                     break;
                 }
             }
@@ -122,9 +118,7 @@ namespace WindowUtility
                     Model.WindowList.Add(AddWindow);
                 });
             }
-            catch (NullReferenceException)
-            {
-            }
+            catch (NullReferenceException) { }
         }
 
     }

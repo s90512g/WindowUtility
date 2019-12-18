@@ -22,15 +22,17 @@ namespace WindowUtility
         private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpText, int nCount);
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern int GetWindowTextLength(IntPtr hWnd);
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
         [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
         static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
         private readonly int WS_EX_TOOLWINDOW = 0x0080;
-        //private readonly int WS_EX_APPWINDOW = 0x40000;
+        private readonly int WS_EX_APPWINDOW = 0x40000;
         private readonly int WS_CHILD = 0x40000000;
 
         private WindowIcon GetWindowIcon = new WindowIcon();
 
-        public enum GWL
+        private enum GWL
         {
             GWL_WNDPROC = (-4),
             GWL_HINSTANCE = (-6),
@@ -41,6 +43,24 @@ namespace WindowUtility
             GWL_ID = (-12)
         }
 
+        private struct WINDOWINFO
+        {
+            public uint cbSize;
+            public RECT rcWindow;
+            public RECT rcClient;
+            public uint dwStyle;
+            public uint dwExStyle;
+            public uint dwWindowStatus;
+            public uint cxWindowBorders;
+            public uint cyWindowBorders;
+            public ushort atomWindowType;
+            public ushort wCreatorVersion;
+            public WINDOWINFO(Boolean? filler) : this()   // Allows automatic initialization of "cbSize" with "new WINDOWINFO(null/true/false)".
+            {
+                cbSize = (UInt32)(Marshal.SizeOf(typeof(WINDOWINFO)));
+            }
+        }
+
         public List<WindowInfo> GetWindow()
         {
             ReturnList.Clear();
@@ -49,16 +69,17 @@ namespace WindowUtility
         }
         private bool EnumWindowProc(IntPtr hWnd, IntPtr lParam)
         {
-            if (IsWindowVisible(hWnd) && (GetWindowLongPtr(hWnd,(int)GWL.GWL_STYLE).ToInt32()& WS_CHILD) != WS_CHILD)
+            //if (IsWindowVisible(hWnd) && (GetWindowLongPtr(hWnd,(int)GWL.GWL_STYLE).ToInt32()& WS_CHILD) != WS_CHILD)
+            //{
+            WINDOWINFO info = new WINDOWINFO();
+            info.cbSize = (uint)Marshal.SizeOf(info);
+            GetWindowInfo(hWnd, ref info);
+            if (IsWindowVisible(hWnd))
             {
-                if ((GetWindowLongPtr(hWnd, (int)GWL.GWL_EXSTYLE).ToInt32() & WS_EX_TOOLWINDOW) != WS_EX_TOOLWINDOW)
+                if ((info.dwExStyle & 0x00000080) != 0x00000080)
                 {
                     PrintWindowInfo(hWnd);
                 }
-                //else if ((GetWindowLongPtr(hWnd, (int)GWL.GWL_EXSTYLE).ToInt32() & WS_EX_APPWINDOW) != WS_EX_APPWINDOW)
-                //{
-                //   // PrintWindowInfo(hWnd);
-                //}
             }
             return true;
         }
@@ -68,21 +89,11 @@ namespace WindowUtility
             int length = GetWindowTextLength(hWnd);
             StringBuilder sb = new StringBuilder((length + 1));
             GetWindowText(hWnd, sb, sb.Capacity);
-            //if (sb.ToString() != String.Empty)
-            //{
             WindowInfo Info = new WindowInfo();
             Info.Name = sb.ToString();
             Info.HWnd = hWnd;
             BitmapSource icon;
-            //if (IsImmersiveProcess(hWnd))
-            //{
-            //    icon = null;
-            //}
-            //else
-            //{
             icon = GetWindowIcon.GetIcon(hWnd);
-            //}
-
             if (icon != null)
             {
                 Info.Icon = icon;
