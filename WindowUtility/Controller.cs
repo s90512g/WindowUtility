@@ -24,6 +24,7 @@ namespace WindowUtility
                     var newList = FindWindow.GetWindow();
                     ModelUpdate(newList);
                     Thread.Sleep(1);
+                    Console.WriteLine(Model.WindowList.Count());
                 }
             })
             { IsBackground = true };
@@ -66,10 +67,12 @@ namespace WindowUtility
                 {
                     foreach (var oldWindowItem in Model.WindowList)
                     {
-                        if (Equals(oldWindowItem.HWnd.ToString(), newWindowItem.HWnd.ToString()) && !Equals(oldWindowItem.Name, newWindowItem.Name))
+                        if (Equals(oldWindowItem.HWnd.ToString(), newWindowItem.HWnd.ToString()))
                         {
                             var index = Model.WindowList.IndexOf(oldWindowItem);
-                            Model.WindowList.Replace(index, newWindowItem);
+                            WindowInfo item = Model.WindowList.ElementAt(index);
+                            item.Name = newWindowItem.Name;
+                            item.Icon = newWindowItem.Icon;
                             break;
                         }
                     }

@@ -58,7 +58,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller.cs" />
-    <Compile Include="ItemObservableCollection.cs" />
     <Compile Include="RECT.cs" />
     <Compile Include="WindowContent.cs" />
     <Compile Include="WindowFinder.cs" />
