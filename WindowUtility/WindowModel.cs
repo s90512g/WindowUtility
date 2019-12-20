@@ -10,9 +10,9 @@ namespace WindowUtility
         public event PropertyChangedEventHandler PropertyChanged;
         public WindowModel()
         {
-            WindowList = new ObservableCollection<WindowInfo>();          
+            WindowList = new ObservableCollection<WindowData>();          
         }
-        public ObservableCollection<WindowInfo> WindowList { get; private set; }        
+        public ObservableCollection<WindowData> WindowList { get; private set; }        
         public BitmapSource PreviewImage
         {
             get { return _PreviewImage; }

@@ -21,7 +21,7 @@ namespace WindowUtility
     public partial class MainWindow : Window
     {
         private Controller controller = new Controller();
-        private WindowInfo MouseTmp = new WindowInfo();
+        private WindowData MouseTmp = new WindowData();
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace WindowUtility
         }
         private void ExBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowListView.SelectedItem is WindowInfo selectItem)
+            if (WindowListView.SelectedItem is WindowData selectItem)
             {
                 controller.ShowWindow(selectItem.HWnd);
             }
@@ -48,12 +48,11 @@ namespace WindowUtility
         private void ListViewItem_MouseMove(object sender, MouseEventArgs e)
         {
             var item = sender as ListViewItem;
-            if (item.Content is WindowInfo tmp)
+            if (item.Content is WindowData tmp)
             {
                 if (!Equals(tmp, MouseTmp))
                 {
                     MouseTmp = tmp;
-                    Console.WriteLine(MouseTmp.HWnd);
                     controller.GetPreView(MouseTmp.HWnd);
                 }
             }

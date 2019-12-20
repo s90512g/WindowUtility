@@ -53,7 +53,7 @@ namespace WindowUtility
             SwitchToThisWindow(hwnd, true);
         }
 
-        private void ModelUpdate(List<WindowInfo> newWindowList)
+        private void ModelUpdate(List<WindowData> newWindowList)
         {
             List<string> oldHWNDList = new List<string>();
             foreach (var window in Model.WindowList)
@@ -70,7 +70,7 @@ namespace WindowUtility
                         if (Equals(oldWindowItem.HWnd.ToString(), newWindowItem.HWnd.ToString()))
                         {
                             var index = Model.WindowList.IndexOf(oldWindowItem);
-                            WindowInfo item = Model.WindowList.ElementAt(index);
+                            WindowData item = Model.WindowList.ElementAt(index);
                             item.Name = newWindowItem.Name;
                             item.Icon = newWindowItem.Icon;
                             break;
@@ -112,7 +112,7 @@ namespace WindowUtility
             }
         }
 
-        private void AddWindowMember(WindowInfo AddWindow)
+        private void AddWindowMember(WindowData AddWindow)
         {
             try
             {

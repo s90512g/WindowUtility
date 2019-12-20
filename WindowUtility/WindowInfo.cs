@@ -1,46 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+
 namespace WindowUtility
 {
-    public class WindowInfo : INotifyPropertyChanged
+    [StructLayout(LayoutKind.Sequential)]
+    struct WINDOWINFO
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private string _name;
-        private BitmapSource _icon;
-        public IntPtr HWnd { get; set; }
-        public string Name
+        public uint cbSize;
+        public RECT rcWindow;
+        public RECT rcClient;
+        public uint dwStyle;
+        public uint dwExStyle;
+        public uint dwWindowStatus;
+        public uint cxWindowBorders;
+        public uint cyWindowBorders;
+        public ushort atomWindowType;
+        public ushort wCreatorVersion;
+
+        public WINDOWINFO(Boolean? filler) : this()   // Allows automatic initialization of "cbSize" with "new WINDOWINFO(null/true/false)".
         {
-            get { return _name; }
-            set
-            {
-                if(value != _name)
-                {
-                    _name = value;
-                    NotifyPropertyChanged("Name");
-                }
-            }
-        }
-        public BitmapSource Icon
-        {
-            get { return _icon; }
-            set
-            {
-                if (value != _icon)
-                {
-                    _icon = value;
-                    NotifyPropertyChanged("Icon");
-                }
-            }
+            cbSize = (UInt32)(Marshal.SizeOf(typeof(WINDOWINFO)));
         }
 
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

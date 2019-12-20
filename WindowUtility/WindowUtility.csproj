@@ -63,7 +63,8 @@
     <Compile Include="WindowContent.cs" />
     <Compile Include="WindowFinder.cs" />
     <Compile Include="WindowIcon.cs" />
-    <Compile Include="WindowInfo.cs" />
+    <Compile Include="WindowData.cs" />
+    <Compile Include="WINDOWINFO.cs" />
     <Compile Include="WindowModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

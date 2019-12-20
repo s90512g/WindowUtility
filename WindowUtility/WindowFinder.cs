@@ -13,34 +13,44 @@ namespace WindowUtility
     class WindowFinder
     {
         private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-        private List<WindowInfo> ReturnList = new List<WindowInfo>();
+        private List<WindowData> ReturnList = new List<WindowData>();
         private WindowIcon GetWindowIcon = new WindowIcon();
 
         [DllImport("user32.dll")]
         private static extern int EnumWindows(EnumWindowsProc hWnd, IntPtr lParam);
-        public List<WindowInfo> GetWindow()
+        public List<WindowData> GetWindow()
         {
             ReturnList.Clear();
             EnumWindows(EnumWindowProc, IntPtr.Zero);
             return ReturnList;
         }
 
+        [DllImport("user32.dll")]
+        static extern bool IsChild(IntPtr hWndParent, IntPtr hWnd);
+
         [DllImport("user32")]
         private static extern bool IsWindowVisible(IntPtr hwnd);
-        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-        private static extern IntPtr GetParent(IntPtr hWnd);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+
         [DllImport("dwmapi.dll")]
         static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
         private bool EnumWindowProc(IntPtr hWnd, IntPtr lParam)
         {
-            IntPtr pHwnd = GetParent(hWnd);
-            bool windowAttribute;
-            DwmGetWindowAttribute(hWnd, DWMWINDOWATTRIBUTE.Cloaked, out windowAttribute, Marshal.SizeOf(typeof(bool)));
-            if (IsWindowVisible(hWnd) && pHwnd == IntPtr.Zero)
+            bool windowCloakAttribute;
+            DwmGetWindowAttribute(hWnd, DWMWINDOWATTRIBUTE.Cloaked, out windowCloakAttribute, Marshal.SizeOf(typeof(bool)));
+            WINDOWINFO info = new WINDOWINFO();
+            GetWindowInfo(hWnd, ref info);
+            if (IsWindowVisible(hWnd))
             {
-                if (!windowAttribute)
+                if (!windowCloakAttribute)
                 {
-                    PrintWindowInfo(hWnd);
+                    if ((info.dwStyle & 0x80000000) != 0x80000000 && (info.dwExStyle & 0x08000000) != 0x08000000)
+                    {
+                        PrintWindowInfo(hWnd);
+                    }
+
                 }
             }
             return true;
@@ -55,7 +65,7 @@ namespace WindowUtility
             int length = GetWindowTextLength(hWnd);
             StringBuilder title = new StringBuilder((length + 1));
             GetWindowText(hWnd, title, title.Capacity);
-            WindowInfo Info = new WindowInfo();
+            WindowData Info = new WindowData();
             Info.Name = title.ToString();
             Info.HWnd = hWnd;
             BitmapSource icon;
