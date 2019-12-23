@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace WindowUtility
 {
-    class GetWindowThumbnail
+    class WindowThumbnail
     {
         public IntPtr _thumb;
-        public void GetThumbnail(IntPtr selfHwnd, IntPtr targethwnd, Rect renderRect)
+        public void PrintThumbnail(IntPtr selfHwnd, IntPtr targethwnd, Rect renderRect)
         {
             if (_thumb != IntPtr.Zero)
             {

@@ -21,7 +21,7 @@ namespace WindowUtility
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Controller controller = new Controller();
+        private WindowControl controller = new WindowControl();
         private WindowData MouseTmp = new WindowData();
         WindowInteropHelper _wih;
         public MainWindow()
@@ -32,7 +32,7 @@ namespace WindowUtility
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.DataContext = controller;
-            controller.GetWindowWorker();
+            controller.WinFindWorker();
             _wih = new WindowInteropHelper(this);
         }
         private void ExBtn_Click(object sender, RoutedEventArgs e)
@@ -45,7 +45,7 @@ namespace WindowUtility
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            controller.StopWinFindWorker();
         }
 
         private void ListViewItem_MouseMove(object sender, MouseEventArgs e)
@@ -62,7 +62,7 @@ namespace WindowUtility
                 if (!Equals(tmp, MouseTmp))
                 {
                     MouseTmp = tmp;
-                    controller.GetPreView(_wih.Handle,MouseTmp.HWnd,renderRect);
+                    controller.ShowPreView(_wih.Handle,MouseTmp.HWnd,renderRect);
                 }
             }
         }

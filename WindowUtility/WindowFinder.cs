@@ -32,11 +32,7 @@ namespace WindowUtility
             {
                 if (!windowCloakAttribute)
                 {
-                    if ((info.dwStyle & 0x80000000) != 0x80000000 && (info.dwExStyle & 0x08000000) != 0x08000000)
-                    {
-                        PrintWindowInfo(hWnd);
-                    }
-
+                    PrintWindowInfo(hWnd);
                 }
             }
             return true;
@@ -45,17 +41,28 @@ namespace WindowUtility
         private void PrintWindowInfo(IntPtr hWnd)
         {
             int length = WINApi.GetWindowTextLength(hWnd);
-            StringBuilder title = new StringBuilder((length + 1));
-            WINApi.GetWindowText(hWnd, title, title.Capacity);
+            StringBuilder title;
             WindowData Info = new WindowData();
-            Info.Name = title.ToString();
+            try
+            {
+                title = new StringBuilder((length + 1));
+                WINApi.GetWindowText(hWnd, title, title.Capacity);
+                Info.Name = title.ToString();
+
+            }
+            catch (ArgumentOutOfRangeException) { Info.Name = ""; }
+
             Info.HWnd = hWnd;
             BitmapSource icon;
             icon = GetWindowIcon.GetIcon(hWnd);
             if (icon != null)
             {
                 Info.Icon = icon;
-                icon.Freeze();
+                try
+                {
+                    icon.Freeze();
+                }
+                catch (InvalidOperationException) { Info.Icon = null; }
             }
             ReturnList.Add(Info);
         }

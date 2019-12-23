@@ -57,11 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controller.cs" />
+    <Compile Include="WindowControl.cs" />
     <Compile Include="DWMApi.cs" />
     <Compile Include="DWMWINDOWATTRIBUTE.cs" />
     <Compile Include="DWM_THUMBNAIL_PROPERTIES.cs" />
-    <Compile Include="GetWindowThumbnail.cs" />
+    <Compile Include="WindowThumbnail.cs" />
     <Compile Include="Rect.cs" />
     <Compile Include="WINApi.cs" />
     <Compile Include="WindowFinder.cs" />

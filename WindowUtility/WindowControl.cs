@@ -9,38 +9,40 @@ using System.Windows;
 using System.Threading;
 namespace WindowUtility
 {
-    class Controller
+    class WindowControl
     {
-        private WindowFinder FindWindow = new WindowFinder();
-        private Thread GetWindowThread;
+        private WindowFinder WinFinder = new WindowFinder();
+        private Thread WinFinderThread;
         public WindowModel Model { get; } = new WindowModel();
-        private GetWindowThumbnail GetWindowContent = new GetWindowThumbnail();
-        public void GetWindowWorker()
+        private WindowThumbnail WinThumbnail = new WindowThumbnail();
+        private bool WinFinderState;
+        public void WinFindWorker()
         {
-            GetWindowThread = new Thread(() =>
+            WinFinderState = true;
+            WinFinderThread = new Thread(() =>
             {
-                while (true)
+                while (WinFinderState)
                 {
-                    var newList = FindWindow.GetWindow();
-                    ModelUpdate(newList);
-                    Thread.Sleep(100);
+                    try
+                    {
+                        var newList = WinFinder.GetWindow();
+                        ModelUpdate(newList);
+                        Thread.Sleep(2000);
+                    }
+                    catch (Exception) { }
                 }
             })
             { IsBackground = true };
-            Console.WriteLine("Thread Working");
-            GetWindowThread.Start();
+            WinFinderThread.Start();
         }
-
-        public void GetPreView(IntPtr selfHwnd,IntPtr sourcehwnd, Rect renderRect)
+        public void StopWinFindWorker()
         {
-            lock (GetWindowContent)
-            {
-                Thread preThread = new Thread(() =>
-                {
-                    GetWindowContent.GetThumbnail(selfHwnd, sourcehwnd, renderRect);
-                });
-                preThread.Start();
-            }
+            WinFinderState = false;
+            Console.WriteLine(WinFinderThread.ThreadState);
+        }
+        public void ShowPreView(IntPtr selfHwnd, IntPtr sourcehwnd, Rect renderRect)
+        {
+            WinThumbnail.PrintThumbnail(selfHwnd, sourcehwnd, renderRect);
         }
 
 
@@ -66,9 +68,16 @@ namespace WindowUtility
                         if (Equals(oldWindowItem.HWnd.ToString(), newWindowItem.HWnd.ToString()))
                         {
                             var index = Model.WindowList.IndexOf(oldWindowItem);
-                            WindowData item = Model.WindowList.ElementAt(index);
-                            item.Name = newWindowItem.Name;
-                            item.Icon = newWindowItem.Icon;
+                            try
+                            {
+                                WindowData item = Model.WindowList.ElementAt(index);
+                                item.Name = newWindowItem.Name;
+                                item.Icon = newWindowItem.Icon;
+                            }
+                            catch (Exception)
+                            {
+
+                            }
                             break;
                         }
                     }
