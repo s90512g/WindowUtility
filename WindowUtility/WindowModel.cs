@@ -4,30 +4,12 @@ using System.Windows.Media.Imaging;
 
 namespace WindowUtility
 {
-    class WindowModel : INotifyPropertyChanged
+    class WindowModel
     {
-        private BitmapSource _PreviewImage;
-        public event PropertyChangedEventHandler PropertyChanged;
         public WindowModel()
         {
             WindowList = new ObservableCollection<WindowData>();          
         }
         public ObservableCollection<WindowData> WindowList { get; private set; }        
-        public BitmapSource PreviewImage
-        {
-            get { return _PreviewImage; }
-            set
-            {
-                if (!Equals(_PreviewImage, value))
-                {
-                    _PreviewImage = value;
-                    NotifyPropertyChanged("PreviewImage");
-                }
-            }
-        }
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

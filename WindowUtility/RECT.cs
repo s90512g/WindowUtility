@@ -6,20 +6,18 @@ using System.Threading.Tasks;
 
 namespace WindowUtility
 {
-    /// <summary>
-    /// left
-    /////Specifies the x-coordinate of the upper-left corner of the rectangle.
-    ///top
-    ///Specifies the y-coordinate of the upper-left corner of the rectangle.
-    ///right
-    ///Specifies the x-coordinate of the lower-right corner of the rectangle.
-    ///bottom
-    ///Specifies the y-coordinate of the lower-right corner of the rectangle
-    /// </summary>
-    public struct RECT
+    public struct Rect
     {
         public int Left, Top, Right, Bottom;
+        public int Width
+        {
+            get { return (Right - Left); }
+        }
+        public int Height
+        {
+            get { return (Bottom - Top); }
+        }
     }
-
+    
 
 }

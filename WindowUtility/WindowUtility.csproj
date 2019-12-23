@@ -58,9 +58,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller.cs" />
+    <Compile Include="DWMApi.cs" />
     <Compile Include="DWMWINDOWATTRIBUTE.cs" />
-    <Compile Include="RECT.cs" />
-    <Compile Include="WindowContent.cs" />
+    <Compile Include="DWM_THUMBNAIL_PROPERTIES.cs" />
+    <Compile Include="GetWindowThumbnail.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="WINApi.cs" />
     <Compile Include="WindowFinder.cs" />
     <Compile Include="WindowIcon.cs" />
     <Compile Include="WindowData.cs" />

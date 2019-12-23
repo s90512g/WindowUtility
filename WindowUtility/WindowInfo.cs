@@ -11,8 +11,8 @@ namespace WindowUtility
     struct WINDOWINFO
     {
         public uint cbSize;
-        public RECT rcWindow;
-        public RECT rcClient;
+        public Rect rcWindow;
+        public Rect rcClient;
         public uint dwStyle;
         public uint dwExStyle;
         public uint dwWindowStatus;

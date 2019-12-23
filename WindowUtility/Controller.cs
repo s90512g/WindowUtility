@@ -12,9 +12,9 @@ namespace WindowUtility
     class Controller
     {
         private WindowFinder FindWindow = new WindowFinder();
-        private WindowContent GetWindowContent = new WindowContent();
         private Thread GetWindowThread;
         public WindowModel Model { get; } = new WindowModel();
+        private GetWindowThumbnail GetWindowContent = new GetWindowThumbnail();
         public void GetWindowWorker()
         {
             GetWindowThread = new Thread(() =>
@@ -23,8 +23,7 @@ namespace WindowUtility
                 {
                     var newList = FindWindow.GetWindow();
                     ModelUpdate(newList);
-                    Thread.Sleep(1);
-                    Console.WriteLine(Model.WindowList.Count());
+                    Thread.Sleep(100);
                 }
             })
             { IsBackground = true };
@@ -32,25 +31,22 @@ namespace WindowUtility
             GetWindowThread.Start();
         }
 
-        public void GetPreView(IntPtr hwnd)
+        public void GetPreView(IntPtr selfHwnd,IntPtr sourcehwnd, Rect renderRect)
         {
             lock (GetWindowContent)
             {
                 Thread preThread = new Thread(() =>
                 {
-                    Console.WriteLine("start");
-                    var img = GetWindowContent.GetContent(hwnd);
-                    Model.PreviewImage = img;
+                    GetWindowContent.GetThumbnail(selfHwnd, sourcehwnd, renderRect);
                 });
                 preThread.Start();
             }
         }
 
-        [DllImport("user32")]
-        static extern void SwitchToThisWindow(IntPtr hwnd, bool bRestore);
+
         public void ShowWindow(IntPtr hwnd)
         {
-            SwitchToThisWindow(hwnd, true);
+            WINApi.SwitchToThisWindow(hwnd, true);
         }
 
         private void ModelUpdate(List<WindowData> newWindowList)

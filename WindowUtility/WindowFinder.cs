@@ -12,37 +12,23 @@ namespace WindowUtility
 {
     class WindowFinder
     {
-        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
         private List<WindowData> ReturnList = new List<WindowData>();
         private WindowIcon GetWindowIcon = new WindowIcon();
 
-        [DllImport("user32.dll")]
-        private static extern int EnumWindows(EnumWindowsProc hWnd, IntPtr lParam);
         public List<WindowData> GetWindow()
         {
             ReturnList.Clear();
-            EnumWindows(EnumWindowProc, IntPtr.Zero);
+            WINApi.EnumWindows(EnumWindowProc, IntPtr.Zero);
             return ReturnList;
         }
 
-        [DllImport("user32.dll")]
-        static extern bool IsChild(IntPtr hWndParent, IntPtr hWnd);
-
-        [DllImport("user32")]
-        private static extern bool IsWindowVisible(IntPtr hwnd);
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
-
-        [DllImport("dwmapi.dll")]
-        static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
         private bool EnumWindowProc(IntPtr hWnd, IntPtr lParam)
         {
             bool windowCloakAttribute;
-            DwmGetWindowAttribute(hWnd, DWMWINDOWATTRIBUTE.Cloaked, out windowCloakAttribute, Marshal.SizeOf(typeof(bool)));
+            DWMApi.DwmGetWindowAttribute(hWnd, DWMWINDOWATTRIBUTE.Cloaked, out windowCloakAttribute, Marshal.SizeOf(typeof(bool)));
             WINDOWINFO info = new WINDOWINFO();
-            GetWindowInfo(hWnd, ref info);
-            if (IsWindowVisible(hWnd))
+            WINApi.GetWindowInfo(hWnd, ref info);
+            if (WINApi.IsWindowVisible(hWnd))
             {
                 if (!windowCloakAttribute)
                 {
@@ -56,15 +42,11 @@ namespace WindowUtility
             return true;
         }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpText, int nCount);
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern int GetWindowTextLength(IntPtr hWnd);
         private void PrintWindowInfo(IntPtr hWnd)
         {
-            int length = GetWindowTextLength(hWnd);
+            int length = WINApi.GetWindowTextLength(hWnd);
             StringBuilder title = new StringBuilder((length + 1));
-            GetWindowText(hWnd, title, title.Capacity);
+            WINApi.GetWindowText(hWnd, title, title.Capacity);
             WindowData Info = new WindowData();
             Info.Name = title.ToString();
             Info.HWnd = hWnd;
